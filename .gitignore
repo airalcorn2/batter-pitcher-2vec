@@ -2,3 +2,4 @@
 2000seve/
 *.csv
 weights.hdf5
+.ipynb_checkpoints/
