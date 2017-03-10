@@ -1,5 +1,6 @@
-2000seve.zip
-2000seve/
+2*seve.zip
+2*seve/
 *.csv
+*.tsv
 weights.hdf5
 .ipynb_checkpoints/
