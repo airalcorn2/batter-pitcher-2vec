@@ -2,5 +2,5 @@
 2*seve/
 *.csv
 *.tsv
-weights.hdf5
+weights*
 .ipynb_checkpoints/

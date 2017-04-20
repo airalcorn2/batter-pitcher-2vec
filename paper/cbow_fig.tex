@@ -1,0 +1,58 @@
+\documentclass[tikz, convert]{standalone}
+
+\begin{document}
+    
+    \begin{tikzpicture}[->, >=stealth, every node/.style={rectangle, line width=1.5pt, draw, minimum width=1cm, minimum height=1cm}]
+    \label{CBOW}
+        
+        % First input.
+        \foreach \x in {-8,-7}
+            \node (I_1-\x) at (\x,0) {};
+        \node[fill=black] (I_1--6) at (-6,0) {};
+        \foreach \x in {-5,...,-1}
+            \node (I_1-\x) at (\x,0) {};
+        
+        % Second input.
+        \foreach \x in {1,...,7}
+            \node (I_2-\x) at (\x,0) {};
+        \node[fill=black] (I_2-8) at (8,0) {};
+        
+        % First embedding.
+        \foreach \x in {-6,...,-3}
+            \node[fill=gray] (E_1-\x) at (\x,3) {};
+        
+        % Second embedding.
+        \foreach \x in {3,...,6}
+            \node[fill=gray] (E_2-\x) at (\x,3) {};
+        
+        % First embedding connections.
+        \foreach \dest in {-6,...,-3}
+            \path[line width=0.7pt] (I_1--6.north) edge (E_1-\dest.south);
+        
+        % Second embedding connections.
+        \foreach \dest in {3,...,6}
+            \path[line width=0.7pt] (I_2-8.north) edge (E_2-\dest.south);
+        
+        % Add.
+        \node[style=circle] (plus) at (0, 6) {\Huge{$+$}};
+        \path[->, line width=1.8pt] (E_1--4.north west) edge [out=60, in=240] (plus.south);
+        \path[->, line width=1.8pt] (E_2-4.north east) edge [out=120, in=300] (plus.south);
+        
+        \foreach \x in {-2,...,1}
+            \node[fill=gray, xshift=0.5cm] (P-\x) at (\x,8) {};
+        \path[->, line width=1.8pt] (plus.north) edge (P-0.south west);
+        
+        % Output.
+        \foreach \x in {-4,...,0}
+            \node[xshift=0.5cm] (O-\x) at (\x,11) {};
+        \node[fill=black,xshift=0.5cm] (O-1) at (1,11) {};
+        \foreach \x in {2,3}
+            \node[xshift=0.5cm] (O-\x) at (\x,11) {};
+        
+        \foreach \source in {-2,...,1}
+            \foreach \dest in {-4,...,3}
+                \path[line width=0.7pt] (P-\source.north) edge (O-\dest.south);
+        
+    \end{tikzpicture}
+    
+\end{document}

@@ -1,0 +1,51 @@
+\documentclass[tikz, convert]{standalone}
+
+\begin{document}
+    
+    \begin{tikzpicture}[->, >=stealth, every node/.style={rectangle, line width=1.5pt, draw, minimum width=1cm, minimum height=1cm, font=\bfseries}]
+    \label{batter_pitcher}
+        
+        % First input.
+        \foreach \x in {-8,...,-1}
+            \node (I_1-\x) at (\x,0) {};
+        \node[fill=black] (I_1--6) at (-6,0) {};
+        
+        % Second input.
+        \foreach \x in {1,...,8}
+            \node (I_2-\x) at (\x,0) {};
+        \node[fill=black] (I_2-8) at (8,0) {};
+        
+        % First embedding.
+        \foreach \x in {-6,...,-3}
+            \node[fill=gray] (E_1-\x) at (\x,3) {};
+        
+        % Second embedding.
+        \foreach \x in {3,...,6}
+            \node[fill=gray] (E_2-\x) at (\x,3) {};
+        
+        % First embedding connections.
+        \foreach \dest in {-6,...,-3}
+            \path[line width=0.7pt] (I_1--6.north) edge (E_1-\dest.south);
+        
+        % Second embedding connections.
+        \foreach \dest in {3,...,6}
+            \path[line width=0.7pt] (I_2-8.north) edge (E_2-\dest.south);
+        
+        % Concatenate.
+        \foreach \x in {-4,...,3}
+            \node[fill=gray, xshift=0.5cm] (P-\x) at (\x,6) {};
+        \path[->, line width=1.8pt] (E_1--3.east) edge [out=0, in=270] (P-0.south west);
+        \path[->, line width=1.8pt] (E_2-3.west) edge [out=180, in=270] (P-0.south west);
+        
+        % Output.
+        \foreach \x in {-4,...,3}
+            \node[xshift=0.5cm] (O-\x) at (\x,9) {};
+        \node[fill=black, xshift=0.5cm] (O-0) at (0,9) {};
+        
+        \foreach \source in {-4,...,3}
+            \foreach \dest in {-4,...,3}
+                \path[line width=0.7pt] (P-\source.north) edge (O-\dest.south);
+        
+    \end{tikzpicture}
+
+\end{document}
