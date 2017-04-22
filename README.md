@@ -1,2 +1,2 @@
-# (batter|pitcher)2vec
-(batter|pitcher)2vec is a model inspired by [<code>word2vec</code>](https://en.wikipedia.org/wiki/Word2vec) (hence the name) that learns distributed representations of MLB players. The Jupyter notebook [<code>batter_bitcher_2vec.ipynb</code>](https://github.com/airalcorn2/batter-pitcher-2vec/blob/master/batter_pitcher_2vec.ipynb) is entirely self-contained.
+# <code>(batter|pitcher)2vec</code>
+<code>(batter|pitcher)2vec</code> is a model inspired by [<code>word2vec</code>](https://en.wikipedia.org/wiki/Word2vec) (hence the name) that learns distributed representations of MLB players. The Jupyter notebook [<code>batter_bitcher_2vec.ipynb</code>](https://github.com/airalcorn2/batter-pitcher-2vec/blob/master/batter_pitcher_2vec.ipynb) is entirely self-contained.
