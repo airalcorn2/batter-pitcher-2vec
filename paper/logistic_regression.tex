@@ -25,16 +25,16 @@
         \path[->, line width=1.8pt] (I_2-1.west) edge [out=120, in=270] (C-0.south west);
         
         % Output.
-        \foreach \x in {-4,...,3}
-            \node[xshift=0.5cm] (O-\x) at (\x,6) {};
-        \node[fill=black, xshift=0.5cm] (O-0) at (0,6) {};
+        \foreach \x in {-2,...,2}
+            \node (O-\x) at (\x,6) {};
+        \node[fill=black] (O-0) at (0,6) {};
         
         % Batter connections.
-        \foreach \dest in {-4,...,3}
+        \foreach \dest in {-2,...,2}
             \path[line width=0.7pt] (C--6.north) edge (O-\dest.south);
         
         % Pitcher connections.
-        \foreach \dest in {-4,...,3}
+        \foreach \dest in {-2,...,2}
             \path[line width=0.7pt] (C-7.north) edge (O-\dest.south);
         
     \end{tikzpicture}

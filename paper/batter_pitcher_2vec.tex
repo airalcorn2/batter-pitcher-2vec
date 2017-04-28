@@ -22,7 +22,7 @@
 
 \addbibresource{batter_pitcher_2vec.bib}
 
-\title{(batter|pitcher)2vec: better at-bat modeling with neural player embeddings}
+\title{\texttt{(batter|pitcher)2vec}: better at-bat modeling with neural player embeddings}
 \date{}
 
 \author{
@@ -61,7 +61,7 @@ Whereas the WAR statistic uses a combination of conventional baseball statistics
 
 When scouts assess the talent of a player, they do not simply count up the number of times the player made it to first base or struck out. They consider the player's tendencies in a number of different contexts. For example, a scout might notice that a certain left-handed batter tends to ground out to third base when facing left-handed curveball pitchers. Or that a certain right-handed fastball pitcher tends to struggle against short right-handed batters. An algorithm capable of learning these subtleties would be a valuable tool for assessing player talent.
 
-The task of extracting informative measures of talent in Major League Baseball (MLB) players has a surprising parallel in the field of natural language processing, word embedding modeling. Words, like MLB players, can be considered distinct elements in a set, and one common way to represent categorical data in machine learning algorithms is with one-hot encodings. A one-hot encoding is an $N$-dimensional vector (where $N$ is the number of elements in the set) consisting entirely of zeros except for a single one at the location corresponding to the element's index. For example, the one-hot encodings for a vocabulary consisting of the words \{"dog", "cat", "constitutional"\} might be $\begin{bsmallmatrix} 1 & 0 & 0 \end{bsmallmatrix}$, $\begin{bsmallmatrix} 0 & 1 & 0 \end{bsmallmatrix}$, and $\begin{bsmallmatrix} 0 & 0 & 1 \end{bsmallmatrix}$, respectively.
+The task of extracting informative measures of talent for Major League Baseball (MLB) players has a surprising parallel in the field of natural language processing, the construction of useful word embeddings. Words, like MLB players, can be considered distinct elements in a set, and one common way to represent such categorical data in machine learning algorithms is as one-hot encodings. A one-hot encoding is an $N$-dimensional vector (where $N$ is the number of elements in the set) consisting entirely of zeros except for a single one at the location corresponding to the element's index. For example, the one-hot encodings for a vocabulary consisting of the words \{"dog", "cat", "constitutional"\} might be $\begin{bsmallmatrix} 1 & 0 & 0 \end{bsmallmatrix}$, $\begin{bsmallmatrix} 0 & 1 & 0 \end{bsmallmatrix}$, and $\begin{bsmallmatrix} 0 & 0 & 1 \end{bsmallmatrix}$, respectively.
 
 One drawback of one-hot encodings is that each vector in the set is orthogonal to and equidistant from every other vector in the set; i.e., every element in the set is equally similar (or dissimilar) to every other element in the set. Words, however, do exhibit varying degrees of semantic similarity. For example, the words "dog" and "cat" are clearly semantically more similar than the words "dog" and "constitutional". Word embeddings mathematically encode such similarities as geometric properties (e.g., cosine similarity or Euclidean distance), and the use of these representations generally leads to more computationally efficient learning algorithms \parencite{Bengio2003}.
 
@@ -128,19 +128,19 @@ Play-by-play data for each game from the 2013, 2014, 2015, and 2016 seasons were
 \label{fig:batter_pitcher}
 \end{figure}
 
-The \texttt{(batter|pitcher)2vec} model architecture can be seen in Figure~\ref{fig:batter_pitcher}, and the similarities between \texttt{(batter|pitcher)2vec} and \texttt{word2vec} should be readily apparent. The model takes one-hot encodings of a batter and pitcher as input and selects the player embeddings from the the batter (\ref{eqn:batter_embedding}) and pitcher (\ref{eqn:pitcher_embedding}) embedding matrices, respectively.
+The \texttt{(batter|pitcher)2vec} model architecture can be seen in Figure~\ref{fig:batter_pitcher}, and the similarities between \texttt{(batter|pitcher)2vec} and \texttt{word2vec} should be readily apparent. The model takes one-hot encodings of a batter and pitcher as input and then selects the corresponding player weights from the the batter (\ref{eqn:batter_embedding}) and pitcher (\ref{eqn:pitcher_embedding}) weight matrices, respectively. The player weight vectors are then passed through a "sigmoid"/logistic activation function.
 
 \begin{equation}
 \label{eqn:batter_embedding}
-w_b = W_B \cdot h_b
+w_b = \sigma(W_B \cdot h_b)
 \end{equation}
 
 \begin{equation}
 \label{eqn:pitcher_embedding}
-w_p = W_P \cdot h_p
+w_p = \sigma(W_P \cdot h_p)
 \end{equation}
 
-Here, $h_b$ is the $N_B$-dimensional one-hot vector (where $N_B$ is the number of batters) for the batter indexed by $b$, $W_B$ is the batter embedding matrix, and $w_b$ is the batter's embedding (i.e., the column in $W_B$ indexed by $b$). Likewise, $h_p$ is the $N_P$-dimensional one-hot vector for the pitcher indexed by $p$, $W_P$ is the pitcher embedding matrix, and $w_p$ is the pitcher's embedding.
+Here, $h_b$ is the $N_B$-dimensional one-hot vector (where $N_B$ is the number of batters) for the batter indexed by $b$, $W_B$ is the batter embedding matrix, $\sigma$ is the logistic activation function (i.e., $\frac{1}{1 + e^{-x}}$) and $w_b$ is the batter's embedding. Likewise, $h_p$ is the $N_P$-dimensional one-hot vector for the pitcher indexed by $p$, $W_P$ is the pitcher embedding matrix, and $w_p$ is the pitcher's embedding.
 
 The batter and pitcher embeddings are then concatenated together (\ref{eqn:concat}) and fed into a standard softmax layer (\ref{eqn:output} and \ref{eqn:prob}), which outputs a probability distribution over at-bat outcomes.
 
@@ -175,9 +175,9 @@ The model was implemented in Keras 2.0 \parencite{Keras2015} and trained on a la
 \section{Results}
 \label{results}
 
-\subsection{Visual inspection of player embeddings}
+\subsection{Visual inspection of the player embeddings}
 
-A visual inspection of the player embeddings can provide some intuition for what the model was learning. Two-dimensional embeddings of the batter and pitcher embeddings were obtained using the t-SNE algorithm \parencite{VanderMaaten2008} and can be seen in Figure~\ref{fig:tsne}. Intriguing player clusterings are readily apparent, for example, Mike Trout and Paul Goldschmidt, Dee Gordon and Ichiro Suzuki, and Aroldis Chapman and Dellin Betances are all close pairs.
+A visual inspection of the player embeddings can provide some intuition for what the model learned. Two-dimensional embeddings of the batter and pitcher embeddings were obtained using the t-SNE algorithm \parencite{VanderMaaten2008} and can be seen in Figure~\ref{fig:tsne}. Intriguing player clusterings are readily apparent, with close pairs including: Mike Trout/Paul Goldschmidt, Dee Gordon/Ichiro Suzuki, and Aroldis Chapman/Dellin Betances.
 
 \begin{figure}
 \captionsetup[subfigure]{labelformat=empty}
@@ -226,7 +226,7 @@ Coloring batters according to various properties and plotting them on the first 
 
 Further insight about the player embeddings can be obtained by inspecting the neighborhoods of different players. As suggested by the t-SNE figure, Paul Goldschmidt is Mike Trout's nearest neighbor; an unsurprising result considering how each athlete is known for his rare blend of speed and power \parencite{Kory2015}. Similarly, Ichiro Suzuki is Dee Gordon's nearest neighbor, and both have a reputation for being able to get on base \parencite{Sullivan2015}. Notably, when clustering players using common MLB stats (e.g., HRs, RBIs), Paul Goldschmidt is not among Mike Trout's ten nearest neighbors, nor is Ichiro Suzuki among Dee Gordon's ten nearest neighbors.
 
-On the pitching side, Craig Kimbrel is Aroldis Chapman's nearest neighbor, which is unsurprising considering both are known as elite closers with overpowering fastballs \parencite{Mirsky2016}. Other nearest neighbors are not as immediately intuitive, for example, Clayton Kershaw and Craig Stammen and Sonny Gray and Jake Arrieta, but a method like \texttt{(batter|pitcher)2vec} could potentially reveal surprising similarities between players who are not considered similar by human standards.
+On the pitching side, Craig Kimbrel is Aroldis Chapman's nearest neighbor, which is unsurprising considering both are known as elite closers with overpowering fastballs \parencite{Mirsky2016}. Similarly, Félix Hernández's two nearest neighbors are Jean Machi and Carlos Carrasco, each of whom includes a pitch with incredible movement in his repertoire \parencite{Buchanan2015, Romano2015, Berg2016}. Other nearest neighbors are not as immediately intuitive, for example, Clayton Kershaw and Craig Stammen (although, Zack Greinke is Kershaw's second closest neighbor), but a method like \texttt{(batter|pitcher)2vec} could potentially reveal surprising similarities between players who are not considered similar by human standards.
 
 \subsection{Opposite-handed dopplegängers}
 
@@ -238,7 +238,7 @@ A similar type of algebra may be possible with the \texttt{(batter|pitcher)2vec}
 
 The representations learned by neural networks are theoretically interesting because they suggest the models are learning "causal" factors from inputs when they are able to generalize (or transfer) well \parencite{RepresentationLearning}. In the case of \texttt{(batter|pitcher)2vec}, accurately modeling at-bat outcome distributions for unseen batter and pitcher pairs might indicate that the model is extracting truly meaningful baseball qualities during learning. To test the model, at-bat outcomes were collected from the 2016 season for previously unseen matchups that included batters and pitchers from the training set. In all, there were 21,479 previously unseen matchups corresponding to 51,580 at-bats.
 
-A naïve prediction strategy will be used as a baseline for comparison to \texttt{(batter|pitcher)2vec}. For any given batter, the expected outcome distribution will be defined as:
+A naïve prediction strategy was used as a baseline for comparison to \texttt{(batter|pitcher)2vec}. For any given batter, the expected outcome distribution was defined as:
 
 \begin{equation}
 \label{eqn:batter_naïve}
@@ -252,7 +252,7 @@ where $o_i$ denotes the outcome indexed by $i$, $b_j$ represents the batter inde
 p(o_i|b_j,t_k) = \frac{p(o_i|b_j) + p(o_i|t_k)}{2}
 \end{equation}
 
-The cross entropy can then be obtained for each at-bat in the test set using both the naïve approach and \texttt{(batter|pitcher)2vec}. The naïve approach produces an average cross entropy of $2.8113$ on the test set while \texttt{(batter|pitcher)2vec} produces a significantly ($p < 0.001$) lower average cross entropy of $2.7848$, a $0.94\%$ improvement. But is an improvement of only $0.94\%$ over the baseline particularly impressive? Comparing the performance of \texttt{(batter|pitcher)2vec} to that of a multinomial logistic regression model (Figure~\ref{fig:log_reg}) may provide some insight. In fact, the multinomial logistic regression model yields an average cross entropy of $2.8118$, which is slightly worse than the naïve approach. \texttt{(batter|pitcher)2vec} thus appears to be exceptional in its ability to model at-bat outcome distributions for previously unseen matchups.
+The cross entropy was calculated for each at-bat in the test set using both the naïve approach and \texttt{(batter|pitcher)2vec}. The naïve approach produced an average cross entropy of $2.8113$ on the test set while \texttt{(batter|pitcher)2vec} produced a significantly ($p < 0.001$) lower average cross entropy of $2.7848$, a $0.94\%$ improvement. But is an improvement of only $0.94\%$ over the baseline particularly impressive? Comparing the performance of \texttt{(batter|pitcher)2vec} to that of a multinomial logistic regression model (Figure~\ref{fig:log_reg}) may provide some insight. In fact, the multinomial logistic regression model produced an average cross entropy of $2.8118$, which is slightly worse than the naïve approach. \texttt{(batter|pitcher)2vec} thus appears to be exceptional in its ability to model at-bat outcome distributions for previously unseen matchups.
 
 \begin{figure}
 \centering
@@ -268,9 +268,9 @@ The results presented in this paper should encourage further exploration of simi
 
 Applying \texttt{(batter|pitcher)2vec} to minor league baseball players would allow one to then train a second model that learns to map a player's minor league representation to his MLB representation. Such a model could then be used for scouting purposes by mapping minor league players into the MLB space and investigating the neighborhood of the prospect's mapped embedding.
 
-The player embeddings may allow for better trade evaluations. For example, swapping the players in a proposed trade and "back simulating" games from earlier in the season to 
+The player embeddings may also allow for better trade evaluations. For example, swapping the players in a proposed trade and "back simulating" games from earlier in the season could allow a team to assess how many more (or fewer) wins they would have obtained with the candidate player on the roster.
 
-Interesting applications of \texttt{(batter|pitcher)2vec}-like architectures are also likely possible in sports other than baseball, for example, modeling National Fooball League offenses and defenses as proposed by \parencite{Alcorn2016}.
+Finally, interesting applications of \texttt{(batter|pitcher)2vec}-like architectures are also likely possible in sports other than baseball, for example, modeling National Fooball League offenses and defenses as proposed by \parencite{Alcorn2016}.
 
 \subsubsection*{Acknowledgments}
 

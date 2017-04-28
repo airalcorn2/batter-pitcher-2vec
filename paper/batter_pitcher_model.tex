@@ -38,12 +38,12 @@
         \path[->, line width=1.8pt] (E_2-3.west) edge [out=180, in=270] (P-0.south west);
         
         % Output.
-        \foreach \x in {-4,...,3}
-            \node[xshift=0.5cm] (O-\x) at (\x,9) {};
-        \node[fill=black, xshift=0.5cm] (O-0) at (0,9) {};
+        \foreach \x in {-2,...,2}
+            \node (O-\x) at (\x,9) {};
+        \node[fill=black] (O-0) at (0,9) {};
         
         \foreach \source in {-4,...,3}
-            \foreach \dest in {-4,...,3}
+            \foreach \dest in {-2,...,2}
                 \path[line width=0.7pt] (P-\source.north) edge (O-\dest.south);
         
     \end{tikzpicture}
